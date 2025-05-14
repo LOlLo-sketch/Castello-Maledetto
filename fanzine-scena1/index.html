@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Il Castello Maledetto</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #000;
+      font-family: 'Georgia', serif;
+    }
+
+    #scene {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #scene-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: blur(20px);
+      transform: scale(1.2);
+      transition: filter 2s ease-out, transform 3s ease-out;
+      z-index: 0;
+    }
+
+    #scene-image.focused {
+      filter: blur(0);
+      transform: scale(1);
+    }
+
+    .dialogue-wrapper {
+      position: absolute;
+      bottom: 5vh;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 700px;
+      aspect-ratio: 16 / 5; /* più bassa */
+      background: url('pergamena_.png') no-repeat center center;
+      background-size: contain;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4vh 4vw;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+      z-index: 2;
+    }
+
+    .dialogue-box {
+      color: #080808;
+      font-size: clamp(16px, 2vw, 20px);
+      line-height: 1.5;
+      text-align: center;
+      max-width: 90%;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    #devil {
+      position: absolute;
+      width: clamp(60px, 7vw, 80px);
+      height: auto;
+      top: 10%;
+      left: 5%;
+      opacity: 0;
+      transition: opacity 2s ease-in-out;
+      z-index: 3;
+    }
+
+    #title-video {
+      position: absolute;
+      top: 5%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70vw;
+      max-width: 600px;
+      z-index: 4;
+      display: none;
+      border-radius: 8px;
+    }
+
+    #torch-audio,
+    #music {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div id="scene">
+  <img id="scene-image" src="Arrivo_Del_Cavaliere.png" alt="Cavaliere">
+
+  <div class="dialogue-wrapper" id="dialogueWrapper">
+    <div id="dialogue" class="dialogue-box"></div>
+  </div>
+  <img id="devil" src="Faccia_diavolo.png" alt="Diavolo">
+
+  <video id="title-video" src="castello_maledetto.mp4" type="video/mp4" playsinline muted preload="auto"></video>
+
+  <audio id="torch-audio" src="fire.wav" autoplay loop></audio>
+  <audio id="music" src="Viking_Feast.mp3"></audio>
+</div>
+
+<script>
+  const sceneImage = document.getElementById('scene-image');
+  const dialogueBox = document.getElementById('dialogue');
+  const dialogueWrapper = document.getElementById('dialogueWrapper');
+  const torchAudio = document.getElementById('torch-audio');
+  const music = document.getElementById('music');
+  const devil = document.getElementById('devil');
+  const titleVideo = document.getElementById('title-video');
+
+  // Frasi divise su due righe manualmente
+  const lines = [
+    "Sicuro di volerti addentrare\nin un posto simile?",
+    "Beh, peggio per te\nmio caro avventuriero."
+  ];
+
+  let currentLine = 0;
+  let charIndex = 0;
+  let typingInterval;
+
+  function typeLine(line) {
+    dialogueBox.textContent = '';
+    charIndex = 0;
+    typingInterval = setInterval(() => {
+      if (charIndex < line.length) {
+        dialogueBox.textContent += line.charAt(charIndex);
+        charIndex++;
+      } else {
+        clearInterval(typingInterval);
+      }
+    }, 50);
+  }
+
+  function showDialogue() {
+    dialogueWrapper.style.opacity = 1;
+    devil.style.opacity = 1;
+    typeLine(lines[currentLine]);
+  }
+
+  function hideDialogue() {
+    dialogueWrapper.style.opacity = 0;
+    devil.style.opacity = 0;
+  }
+
+  function showTitle() {
+    titleVideo.style.display = 'block';
+    titleVideo.play();
+  }
+
+  // Avvio iniziale
+  setTimeout(() => {
+    sceneImage.classList.add('focused');
+    setTimeout(() => {
+      showDialogue();
+    }, 3000);
+  }, 500);
+
+  // Clic per avanzare il testo
+  document.addEventListener('click', () => {
+    if (dialogueWrapper.style.opacity === '1') {
+      if (charIndex < lines[currentLine].length) {
+        clearInterval(typingInterval);
+        dialogueBox.textContent = lines[currentLine];
+        charIndex = lines[currentLine].length;
+      } else {
+        currentLine++;
+        if (currentLine < lines.length) {
+          typeLine(lines[currentLine]);
+        } else {
+          hideDialogue();
+          music.play();
+          showTitle();
+        }
+      }
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,63 @@
+body {
+  margin: 0;
+  overflow: hidden;
+  background-color: #000;
+}
+
+#scene {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: url('img/cavaliere-castello.jpg') no-repeat center center/cover;
+}
+
+.dialogue-wrapper {
+  position: relative;
+  width: 90%;
+  max-width: 700px;
+  height: auto; /* Mantieni l'altezza flessibile */
+  background: url('pergamena_.png') no-repeat center center;
+  background-size: 100% auto; /* Allunga la pergamena senza deformarla */
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+  display: flex;
+  justify-content: center; /* Centra orizzontalmente */
+  align-items: center;     /* Centra verticalmente */
+  padding: 10vh 5vw; /* Aggiusta il padding per meglio centrare il testo */
+  flex-direction: column;
+  text-align: center; /* Centra il testo all'interno */
+  overflow: hidden; /* Impedisce che il testo fuoriesca */
+  min-height: 20vh; /* Garantisce che la pergamena non sia troppo piccola */
+}
+
+.dialogue-box {
+  color: #080808;
+  font-size: clamp(16px, 2.5vw, 22px);
+  text-align: center; /* Centra il testo orizzontalmente */
+  max-width: 100%;
+  word-wrap: break-word;
+  line-height: 1.5;
+}
+
+#devil {
+  width: clamp(50px, 10vw, 90px); /* Impostato per adattarsi alle dimensioni dello schermo */
+  height: auto;
+  opacity: 0;
+  transition: opacity 2s ease-in-out;
+  position: absolute;
+  top: 5%;
+  left: 5%; /* Posiziona il diavolo in alto a sinistra */
+  z-index: 3;
+}
+
+#title-video {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80vw;
+  max-width: 600px;
+  z-index: 10;
+  border: none;
+  border-radius: 8px;
+}
